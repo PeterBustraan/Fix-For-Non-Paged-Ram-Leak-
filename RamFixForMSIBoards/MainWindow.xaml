@@ -1,0 +1,40 @@
+﻿<Window x:Class="RamFixForMSIBoards.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RamFixForMSIBoards"
+        mc:Ignorable="d"
+        Title="Simple Ram Leak Tweaks" Height="492.554" Width="678.82" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Rectangle Fill="#FFF4F4F5" Height="52" Margin="39,244,182,0" Stroke="Black" VerticalAlignment="Top" Width="450" HorizontalAlignment="Left"/>
+        <Rectangle Fill="#FFF4F4F5" Height="52" Margin="39,319,182,0" Stroke="Black" VerticalAlignment="Top" Width="450" HorizontalAlignment="Left"/>
+        <Rectangle Fill="#FFF4F4F5" Height="52" Margin="180,244,20,0" Stroke="Black" VerticalAlignment="Top" Width="450" HorizontalAlignment="Left"/>
+        <Rectangle Fill="#FFF4F4F5" Height="52" Margin="180,319,20,0" Stroke="Black" VerticalAlignment="Top" Width="450" HorizontalAlignment="Left"/>
+        <StatusBar Height="29" Margin="-2,433,2,0" VerticalAlignment="Top" Width="671" HorizontalAlignment="Left">
+            <TextBlock x:Name="permStatus" TextWrapping="Wrap" Text="Loading . . ." RenderTransformOrigin="6.228,0.855" VerticalAlignment="Center" Width="661" TextAlignment="Right" HorizontalAlignment="Left"/>
+        </StatusBar>
+        <Label x:Name="label" Content="Description&#xD;&#xA;" HorizontalAlignment="Left" Margin="280,0" VerticalAlignment="Top" Width="109" Height="30" FontSize="18"/>
+        <Button x:Name="setNonPaged" Content="SET" HorizontalAlignment="Left" Margin="221,254,310,0" Width="130" Height="32" Click="setNonPagedSize" VerticalAlignment="Top" FontSize="22" />
+        <Button x:Name="setNetworkStart" Content="SET" Margin="221,329,310,0" VerticalAlignment="Top" Width="130" Height="32" FontSize="22" HorizontalAlignment="Left"/>
+        <Button x:Name="setDefaultParams" Content="RESET" Margin="442,387,0,0" VerticalAlignment="Top" Width="160" Height="32" HorizontalAlignment="Left"/>
+        <TextBox x:Name="nonPagedSize" Height="32" Margin="464,254,95,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="100" FontFamily="Segoe UI Black" FontSize="22" HorizontalAlignment="Left"/>
+        <TextBox x:Name="networkStart" Height="32" Margin="464,329,95,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="100" FontFamily="Segoe UI Black" FontSize="22" HorizontalAlignment="Left"/>
+        <TextBlock x:Name="Description" Margin="10,35,0,0" TextWrapping="Wrap" HorizontalAlignment="Left" Height="204" VerticalAlignment="Top">
+            This application is a simple interface to preform a pair of registry tweaks that nullify certain problems found between windows 10 and certain MSI motherboards and Killer Networking graphics cards.
+            <LineBreak></LineBreak>
+            <LineBreak></LineBreak>
+            Changing the non paged pool size (by default this is automatically controlled) Can limit the ammount of times a null driver is loaded into the system as a result of minor driver incompatibilities. While this doesn't lock the size It should cure uncheked ram consumption. Gamers should target 512mb and other users should target 192mb.
+            <LineBreak></LineBreak>
+            IT WILL CONSUME ALL THE SPACE YOU GIVE IT, so be aware of your needs and overall ram availability.
+            <LineBreak></LineBreak>
+            <LineBreak></LineBreak>
+            The second option is to set the start value of The windows inbuilt network driver, Your choices are between 1 and 5 but 4 is recomended. 4 = Disable (PICK THIS ONE) :  0 = Boot : 1 = System : 2= Autoload : 3 = Load on Demand : 5 = Delayed Start
+            <LineBreak></LineBreak>
+            By Limiting the NonPagedPool size you can prevent most issues with memory leaks related to drivers eating up extra ram, the network solution is purely for Killer Networking cards. Simply enter the desired number and hit SET.
+        </TextBlock>
+        <Label x:Name="NonPaged_Label" Content="Non Paged Pool Size" Margin="39,244,497,0" VerticalAlignment="Top" Height="52" Width="135" HorizontalAlignment="Left"/>
+        <Label x:Name="NonPaged_Label_Copy" Content="Network Start Variable" Margin="39,319,497,0" VerticalAlignment="Top" Height="52" Width="135" HorizontalAlignment="Left"/>
+
+    </Grid>
+</Window>
