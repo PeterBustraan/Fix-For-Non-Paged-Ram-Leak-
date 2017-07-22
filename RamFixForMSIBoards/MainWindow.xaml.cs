@@ -1,17 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Security.Principal;
 using Microsoft.Win32;
 
@@ -24,6 +12,8 @@ namespace RamFixForMSIBoards
     {
         private string nonPath = "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management";
         private string netPath = "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\Ndu";
+        private int resetNetStart;
+        private int resetNonStart;
         private bool ElevationStatus;
 
         public MainWindow()
@@ -38,7 +28,6 @@ namespace RamFixForMSIBoards
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
             WindowsPrincipal principal = new WindowsPrincipal(identity);
             ElevationStatus = principal.IsInRole(WindowsBuiltInRole.Administrator);
-            //bool ElevationStatus = WindowsIdentity.GetCurrent().Owner.IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid);
 
             if (!ElevationStatus)
             {
@@ -55,13 +44,10 @@ namespace RamFixForMSIBoards
             checkElevation();
             if (ElevationStatus)
             {
-                //string path = "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management";
-                //int startingNumber =
-                //    Convert.ToInt32(Registry.GetValue(path, "NonPagedPoolSize", -1));
                 int newSize;
                 if (int.TryParse(nonPagedSize.Text, out newSize))
                 {
-                    MessageBox.Show(newSize.ToString("X"));
+                    Registry.SetValue(nonPath, "NonPagedPoolSize", newSize);
                 }
                 else
                 {
@@ -74,17 +60,15 @@ namespace RamFixForMSIBoards
             }
         }
 
-        private void setNetworkStartVar() { 
+        private void setNetworkStartVar(object sender, RoutedEventArgs e)
+        { 
             checkElevation();
             if (ElevationStatus)
             {
-                //string path = "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management";
-                //int startingNumber =
-                //    Convert.ToInt32(Registry.GetValue(path, "NonPagedPoolSize", -1));
-                int newSize;
-                if (int.TryParse(nonPagedSize.Text, out newSize))
+                int newStart;
+                if (int.TryParse(networkStart.Text, out newStart))
                 {
-                    MessageBox.Show(newSize.ToString("X"));
+                    Registry.SetValue(netPath, "Start", newStart);
                 }
                 else
                 {
@@ -95,15 +79,24 @@ namespace RamFixForMSIBoards
             {
                 MessageBox.Show("Cannot Set Non Paged Pool Size without admin permissions", "Error");
             }
+        }
+
+        private void resetValues(object sender, RoutedEventArgs e)
+        {
+            nonPagedSize.Text = Convert.ToString(resetNonStart);
+            Registry.SetValue(nonPath, "NonPagedPoolSize", resetNonStart);
+
+            networkStart.Text = Convert.ToString(resetNetStart);
+            Registry.SetValue(netPath, "Start", resetNetStart);
         }
 
         private void getDefaults(){ getCurrentNonPagedSize(); getCurrentNetworkStartSetting();}
 
         private void getCurrentNonPagedSize()
         {
-            string path =
-            int startingNumber = 
-                Convert.ToInt32(Registry.GetValue(path, "NonPagedPoolSize", -1));
+            string path = nonPath;
+            int startingNumber = Convert.ToInt32(Registry.GetValue(path, "NonPagedPoolSize", -1));
+            resetNonStart = startingNumber;
 
             nonPagedSize.Text = "Loading . . .";
 
@@ -119,9 +112,9 @@ namespace RamFixForMSIBoards
 
         private void getCurrentNetworkStartSetting()
         {
-            string path = "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\Ndu";
-            int startingNumber =
-                Convert.ToInt32(Registry.GetValue(path, "Start", -1));
+            string path = netPath;
+            int startingNumber = Convert.ToInt32(Registry.GetValue(path, "Start", -1));
+            resetNetStart = startingNumber;
 
             networkStart.Text = "Loading . . .";
 
